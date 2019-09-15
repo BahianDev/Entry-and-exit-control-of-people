@@ -246,7 +246,7 @@ class LoginForm extends Component {
                 </div>
                 {/* Begin Modal Register Form */}
 
-                {/* Begin Modal List Authenticad List  */}
+                {}
 
                 <div className="modal fade" id="authenticatedModal" tabIndex="-1" role="dialog" aria-labelledby="authenticatedModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
