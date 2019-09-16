@@ -107,6 +107,7 @@ class LoginForm extends Component {
     */
 
     handleSignUpSubmit(e) {
+        
         e.preventDefault();
         let dataToSend = {
             userData: {
@@ -118,8 +119,9 @@ class LoginForm extends Component {
 
 
         let url = 'http://localhost:3001/users/register';
+   
 
-        fetch(url, {
+        fetch(url,{
             method: "POST",
             body: JSON.stringify(dataToSend),
             headers: {
