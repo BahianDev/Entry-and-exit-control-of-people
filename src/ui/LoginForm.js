@@ -20,20 +20,23 @@ class LoginForm extends Component {
             },
             logged: false,
             users: undefined,
-            error: undefined
+            error: undefined,
+            verificado: false
         }
     }
 
     static displayName = 'ui-LoginForm'
 
     componentDidMount() {
-        this.verifytoken();
+      this.verifytoken();
     }
 
+
     verifytoken() {
+    
         let url = 'http://localhost:3001/auth/verifytoken';
         let token = localStorage.getItem('DD101_TOKEN');
-
+  
         if (!token) {
             this.setState({
                 error: 'No token defined. Please Login.'
@@ -44,18 +47,20 @@ class LoginForm extends Component {
         fetch(url, {
             method: "GET",
             body: undefined,
-            headers: {
+            headers: new Headers({
                 "Content-Type": "application/json",
-                "authorization": `Bearer ${token}`
-            }
+                "Authorization":`Bearer ${token}`
+       
+            })
         }).then(response => response.json())
             .then(responseJson => {
                 if (responseJson.success) {
+                  
                     this.setState({
                         logged: responseJson.success,
                         error: undefined
                     })
-                    this.loadUsers()
+                
                 } else {
                     this.setState({
                         error: responseJson.error.message
@@ -63,6 +68,7 @@ class LoginForm extends Component {
                 }
             }).catch(err => this.setState({ error: err }));
     }
+
 
     loadUsers() {
         let url = 'http://localhost:3001/users/listusers';
@@ -99,7 +105,7 @@ class LoginForm extends Component {
                     <small id="emailHelp" className="form-text text-muted">Only registered and logged users can call and see the list. Plese click the button above to call the API.</small>
                 </div>
             );
-        }
+        } 
     }
 
     /*
@@ -178,10 +184,19 @@ class LoginForm extends Component {
             }
         }).then(response => response.json())
             .then(responseJson => {
+              console.log(responseJson.token)
                 if (responseJson.success) {
-                    localStorage.setItem('DD101_TOKEN', responseJson.token);
+                 
+                    localStorage.setItem("DD101_TOKEN", responseJson.token);
+                    this.setState({
+                      logged: true,
+                      error: undefined
+                  })  
                 }
+                
             })
+       
+           
     }
 
     handleEmailChange(e) {
@@ -196,9 +211,13 @@ class LoginForm extends Component {
         });
     }
 
+
     render() {
+    
         return (
+      
             <div className="container">
+       
                 {/* Begin Modal Register Form */}
                 <div className="modal fade" id="signupModel" tabIndex="-1" role="dialog" aria-labelledby="signupModelLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
@@ -215,7 +234,7 @@ class LoginForm extends Component {
                                     this.state.signUp.success !== undefined ? (
                                         this.state.signUp.success === true ?
                                             <div className="alert alert-success" role="alert">
-                                                {this.state.signUp.message}
+                                                {this.state.signUp.message }
                                             </div>
                                             :
                                             <div className="alert alert-danger" role="alert">
@@ -278,8 +297,6 @@ class LoginForm extends Component {
                                         ) : this.state.error
                                     }
 
-
-
                                 </div>
 
                             </div>
@@ -320,10 +337,9 @@ class LoginForm extends Component {
                                     </div>
                                     <button type="submit" className="btn btn-primary btn-block">Login</button>
                                     <small id="emailHelp" className="form-text text-muted">If you are not registered. Plese <a href="#" data-toggle="modal" data-target="#signupModel" data-whatever="@mdo" >Signup</a></small>
+                               
                                     <br />
-                                    {
-                                        this.showAuthorizedArea()
-                                    }
+                                    {this.showAuthorizedArea()}
                                 </form>
 
 
